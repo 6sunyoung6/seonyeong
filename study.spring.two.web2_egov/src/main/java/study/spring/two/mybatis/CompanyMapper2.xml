@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="company">
+	<insert id="insert" parameterType="study.spring.two.dto.CompanyDto">
+		insert into companyInfo(companyNo, companyName, addr, daepyoType,daepyosName,
+		daepyosAddress,jumin1, homepage,etc, daepyo)
+		values(
+			seq_companyInfo.nextval,
+			#{companyName, jdbcType=VARCHAR},
+			#{addr, jdbcType=VARCHAR},
+			#{daepyoType, jdbcType=VARCHAR},
+			
+			#{daepyosName, jdbcType=VARCHAR},
+			#{daepyosAddress, jdbcType=VARCHAR},
+			#{jumin1, jdbcType=VARCHAR},
+			
+			#{homepage, jdbcType=VARCHAR},
+			#{etc, jdbcType=VARCHAR},
+			#{daepyo, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	<select id="getList" resultType="companyDto">
+		select * from companyInfo
+	</select>
+	
+	<delete id="delete" parameterType="companyDto">
+		delete from companyInfo
+		where companyNo=#{companyNo}
+	</delete>
+	
+	<select id="pageList" parameterType="companyDto" resultType="companyDto">
+		SELECT *
+		FROM 
+			(SELECT result.*, ROWNUM rnum
+			 FROM 
+			 	(SELECT *
+			 	 FROM companyInfo
+			 	 ORDER BY companyNo DESC
+			 	) result
+			)
+		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	
+	
+	
+	<select id="getTotalRow" resultType="int" parameterType="map">
+		select nvl(max(rownum), 0)
+		from companyInfo
+		<include refid="search2"></include>
+	</select>
+	
+	<select id="listAll" resultType="companyDto" parameterType="map">
+		SELECT *
+		FROM 
+			(SELECT result.*, ROWNUM rnum
+			 FROM 
+			 	(SELECT *
+			 	 FROM companyInfo
+				<include refid="search2"></include>
+			 	 ORDER BY companyNo DESC
+			 	) result
+			)
+		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<sql id="search2">
+		<choose>
+			<when test="searchOption == 'all'">
+				WHERE companyName like '%' ||#{keyword}|| '%'
+				OR companyNo like '%' ||#{keyword}|| '%'
+				OR daepyosName like '%' ||#{keyword}|| '%' 
+			</when>
+			<otherwise>
+				where ${searchOption} like '%' ||#{keyword}|| '%'
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="countArticle" resultType="int" parameterType="companyDto">
+		select count(*) from companyInfo
+		<include refid="search2"></include>
+	</select>
+	
+	<select id="getData" parameterType="int" resultType="companyDto">
+		select * from companyInfo
+		where companyNo=#{companyNo}
+	</select>
+	
+	<update id="update" parameterType="companyDto">
+		UPDATE companyInfo 
+		SET
+			companyName = #{companyName, jdbcType=VARCHAR},
+			addr = #{addr, jdbcType=VARCHAR},
+			daepyoType = #{daepyoType, jdbcType=VARCHAR},
+			
+			daepyosName = #{daepyosName, jdbcType=VARCHAR},
+			daepyosAddress = #{daepyosAddress, jdbcType=VARCHAR},
+			jumin1 = #{jumin1, jdbcType=VARCHAR},
+			
+			daepyo = #{daepyo, jdbcType=VARCHAR},
+			homepage = #{homepage, jdbcType=VARCHAR},
+			etc = #{etc, jdbcType=VARCHAR}
+			
+			WHERE companyNo=#{companyNo}
+	</update>
+</mapper>

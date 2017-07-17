@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- Type 별칭 미리 정의하기 -->
+	<typeAliases>
+		 <typeAlias type="study.spring.two.dto.WebDto" alias="webDto"/> 
+		 <typeAlias type="study.spring.two.dto.CompanyDto" alias="companyDto"/>
+		 <typeAlias type="study.spring.two.dto.AaaDto" alias="aaaDto"/>
+	</typeAliases>
+
+	<!-- sql 문을 정의하고 있는 xml 문서 정보 -->
+	<mappers>
+		 <mapper resource="study/spring/two/mybatis/WebMapper.xml"/>
+		 <mapper resource="study/spring/two/mybatis/CompanyMapper2.xml"/>
+		 <mapper resource="study/spring/two/mybatis/aaa.xml"/>
+	</mappers>
+</configuration>
+
+
+
+

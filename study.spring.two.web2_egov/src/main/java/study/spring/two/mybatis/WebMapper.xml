@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="web">
+	<insert id="insert" parameterType="study.spring.two.dto.WebDto">
+		insert into board_0616
+		values(seq_BOARD_0616.NEXTVAL, 
+		#{kor_name, jdbcType=VARCHAR},
+			#{eng_name, jdbcType=VARCHAR},
+			#{han_name, jdbcType=VARCHAR},
+			#{jumin1, jdbcType=VARCHAR},
+			#{jumin2, jdbcType=VARCHAR},
+			#{img, jdbcType=VARCHAR},
+			#{b_year, jdbcType=VARCHAR},
+			#{b_month, jdbcType=VARCHAR},
+			#{b_day, jdbcType=VARCHAR},
+			#{calender, jdbcType=VARCHAR},
+			#{gender, jdbcType=VARCHAR},
+			#{marry, jdbcType=VARCHAR},
+			#{work_date, jdbcType=VARCHAR},
+			#{sal_type, jdbcType=VARCHAR},
+			#{work_type, jdbcType=VARCHAR},
+			#{work_state, jdbcType=VARCHAR},
+			#{postcode, jdbcType=VARCHAR},
+			#{addr1, jdbcType=VARCHAR},
+			#{addr2, jdbcType=VARCHAR},
+			#{tel1, jdbcType=VARCHAR},
+			#{tel2, jdbcType=VARCHAR},
+			#{tel3, jdbcType=VARCHAR},
+			#{email, jdbcType=VARCHAR},
+			#{tech, jdbcType=VARCHAR},
+			#{drink, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getList" resultType="webDto">
+		select * from board_0616
+	</select>
+	
+	<delete id="delete" parameterType="webDto">
+		delete from board_0616
+		where no=#{no}
+	</delete>
+	
+	<select id="pageList" parameterType="webDto" resultType="webDto">
+		SELECT *
+		FROM 
+			(SELECT result.*, ROWNUM rnum
+			 FROM 
+			 	(SELECT *
+			 	 FROM board_0616
+			 	 ORDER BY no DESC
+			 	) result
+			)
+		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="getTotalRow" resultType="int" parameterType="map">
+		select nvl(max(rownum), 0)
+		from board_0616
+		<include refid="search"></include>
+	</select>
+	
+	<select id="listAll" resultType="webDto" parameterType="webDto">
+		SELECT *
+		FROM 
+			(SELECT result.*, ROWNUM rnum
+			 FROM 
+			 	(SELECT *
+			 	 FROM board_0616
+				<include refid="search"></include>
+			 	 ORDER BY no DESC
+			 	) result
+			)
+		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="countArticle" resultType="int" parameterType="webDto">
+		select count(*) from board_0616
+		<include refid="search"></include>
+	</select>
+	<sql id="search">
+		<choose>
+			<when test="searchOption == 'all'">
+				WHERE kor_name like '%' ||#{keyword}|| '%'
+				OR gender like '%' ||#{keyword}|| '%'
+				OR tech like '%' ||#{keyword}|| '%' 
+			</when>
+			<otherwise>
+				where ${searchOption} like '%' ||#{keyword}|| '%'
+					<if test="searchOption2 == 'jumin1'">
+						AND jumin1 like '%' ||#{keyword2}|| '%' 
+					</if>
+					<if test="searchOption2 == 'work_state'">
+						AND work_state like '%' ||#{keyword2}|| '%' 
+					</if>
+					<if test="searchOption2 == 'work_type'">
+						AND work_type  like '%' ||#{keyword2}|| '%' 
+					</if>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="getData" parameterType="int" resultType="webDto">
+		select * from board_0616
+		where no=#{no}
+	</select>
+	
+	<update id="update" parameterType="webDto">
+		UPDATE BOARD_0616 
+		SET
+			kor_name = #{kor_name},
+			eng_name = #{eng_name, jdbcType=VARCHAR},
+			han_name = #{han_name, jdbcType=VARCHAR},
+			jumin1 = #{jumin1, jdbcType=VARCHAR},
+			jumin2 = #{jumin2, jdbcType=VARCHAR},
+			img = #{img, jdbcType=VARCHAR},
+			b_year = #{b_year, jdbcType=VARCHAR},
+			b_month = #{b_month, jdbcType=VARCHAR},
+			b_day = #{b_day, jdbcType=VARCHAR},
+			calender = #{calender, jdbcType=VARCHAR},
+			gender = #{gender, jdbcType=VARCHAR},
+			marry = #{marry, jdbcType=VARCHAR},
+			work_date = #{work_date, jdbcType=VARCHAR},
+			sal_type = #{sal_type, jdbcType=VARCHAR},
+			work_type = #{work_type, jdbcType=VARCHAR},
+			work_state = #{work_state, jdbcType=VARCHAR},
+			postcode = #{postcode, jdbcType=VARCHAR},
+			addr1 = #{addr1, jdbcType=VARCHAR},
+			addr2 = #{addr2, jdbcType=VARCHAR},
+			tel1 = #{tel1, jdbcType=VARCHAR},
+			tel2 = #{tel2, jdbcType=VARCHAR},
+			tel3 = #{tel3, jdbcType=VARCHAR},
+			email = #{email, jdbcType=VARCHAR},
+			tech = #{tech, jdbcType=VARCHAR},
+			drink = #{drink, jdbcType=VARCHAR}
+			WHERE no=#{no}
+	</update>
+</mapper>
